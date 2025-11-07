@@ -1,0 +1,24 @@
+import 'dotenv/config';
+import { REST, Routes, SlashCommandBuilder } from 'discord.js';
+
+if (String(process.env.AUTO_REGISTER_COMMANDS).toLowerCase() !== 'true') {
+  console.log('ℹ️ AUTO_REGISTER_COMMANDS is false — skipping registration.');
+  process.exit(0);
+}
+
+const commands = [
+  new SlashCommandBuilder().setName('ping').setDescription('Replies with Pong + latency').toJSON()
+];
+
+const token = process.env.DISCORD_TOKEN;
+const clientId = process.env.DISCORD_CLIENT_ID;
+const guildId = process.env.DISCORD_GUILD_ID;
+
+if (!token || !clientId || !guildId) {
+  console.error('❌ Missing DISCORD_TOKEN, DISCORD_CLIENT_ID or DISCORD_GUILD_ID');
+  process.exit(1);
+}
+
+const rest = new REST({ version: '10' }).setToken(token);
+await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands });
+console.log('✅ Commands registered to guild', guildId);
