@@ -1,0 +1,12 @@
+{
+  "Notes": [
+    "All configuration is managed in AMP → Configuration. No .env files required.",
+    "On first start, the template fetches your starter (Git/ZIP), installs deps, optionally registers slash commands, and launches.",
+    "If your entry file isn’t index.js, change Startup → Arguments.",
+    "Enabling prefix commands needs the 'Message Content' privileged intent enabled in the Discord Developer Portal."
+  ],
+  "Links": {
+    "discord.js": "https://discord.js.org/",
+    "Discord Dev Portal": "https://discord.com/developers/applications"
+  }
+}
