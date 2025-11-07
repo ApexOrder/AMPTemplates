@@ -1,0 +1,102 @@
+{
+  "DisplayName": "Discord Bot (discord.js)",
+  "Description": "Seeds a minimal discord.js bot and exposes all settings via AMP Configuration.",
+  "OS": ["Windows", "Linux"],
+  "Management": { "ConsoleType": "Stdout", "StopType": "Process" },
+  "Networking": { "Ports": [] },
+
+  "UpdateSources": [
+    {
+      "Name": "Bot Starter (Git)",
+      "Type": "Git",
+      "URL": "https://github.com/ApexOrder/AMPTemplates",
+      "Branch": "main",
+      "TargetPath": ".",
+      "AutoUpdate": false
+    }
+    /* OR:
+    {
+      "Name": "Bot Starter (ZIP)",
+      "Type": "Zip",
+      "URL": "REPLACE_WITH_YOUR_ZIP_URL",
+      "TargetPath": ".",
+      "AutoUpdate": false
+    }
+    */
+  ],
+
+  "Startup": {
+    "WorkingDirectory": ".",
+    "Executable": {
+      "Windows": "C:\\\\Program Files\\\\nodejs\\\\node.exe",
+      "Linux": "/usr/bin/node"
+    },
+    "Arguments": ["index.js"],
+    "EnvironmentVariables": {
+      "DISCORD_TOKEN": "$Setting[DiscordToken]",
+      "DISCORD_CLIENT_ID": "$Setting[DiscordClientId]",
+      "DISCORD_GUILD_ID": "$Setting[DiscordGuildId]",
+
+      "COMMAND_PREFIX": "$Setting[CommandPrefix]",
+
+      "ENABLE_MESSAGE_COMMANDS": "$Setting[EnableMessageCommands]",
+      "AUTO_REGISTER_COMMANDS": "$Setting[AutoRegisterCommands]",
+
+      "PRESENCE_STATUS": "$Setting[PresenceStatus]",
+      "ACTIVITY_TYPE": "$Setting[ActivityType]",
+      "ACTIVITY_TEXT": "$Setting[ActivityText]",
+
+      "OWNER_IDS": "$Setting[OwnerIds]",
+      "LOG_LEVEL": "$Setting[LogLevel]",
+
+      "NODE_ENV": "production"
+    },
+    "PreStart": [
+      {
+        "Name": "Install dependencies",
+        "Windows": "C:\\\\Program Files\\\\nodejs\\\\npm.cmd ci --no-audit --no-fund",
+        "Linux": "npm ci --no-audit --no-fund",
+        "RunOnce": true,
+        "WorkingDirectory": "."
+      },
+      {
+        "Name": "Register slash commands (honours toggle)",
+        "Windows": "C:\\\\Program Files\\\\nodejs\\\\npm.cmd run deploy-commands",
+        "Linux": "npm run deploy-commands",
+        "RunOnce": true,
+        "WorkingDirectory": "."
+      }
+    ]
+  },
+
+  "Configuration": {
+    "Categories": [
+      {
+        "Name": "Discord",
+        "Items": [
+          { "Name": "DiscordToken", "DisplayName": "Bot Token", "Type": "password", "Default": "" },
+          { "Name": "DiscordClientId", "DisplayName": "Application (Client) ID", "Type": "text", "Default": "" },
+          { "Name": "DiscordGuildId", "DisplayName": "Test Guild ID (for fast slash-cmds)", "Type": "text", "Default": "" },
+          { "Name": "CommandPrefix", "DisplayName": "Command Prefix", "Type": "text", "Default": "!" },
+          { "Name": "EnableMessageCommands", "DisplayName": "Enable Prefix Commands (requires Message Content intent)", "Type": "checkbox", "Default": "false" },
+          { "Name": "AutoRegisterCommands", "DisplayName": "Auto-register Slash Commands on Install/Update", "Type": "checkbox", "Default": "true" }
+        ]
+      },
+      {
+        "Name": "Presence",
+        "Items": [
+          { "Name": "PresenceStatus", "DisplayName": "Status", "Type": "dropdown", "Default": "online", "Items": ["online","idle","dnd","invisible"] },
+          { "Name": "ActivityType", "DisplayName": "Activity Type", "Type": "dropdown", "Default": "PLAYING", "Items": ["PLAYING","LISTENING","WATCHING","COMPETING"] },
+          { "Name": "ActivityText", "DisplayName": "Activity Text", "Type": "text", "Default": "ApexOrder servers" }
+        ]
+      },
+      {
+        "Name": "Advanced",
+        "Items": [
+          { "Name": "OwnerIds", "DisplayName": "Owner IDs (comma-separated)", "Type": "text", "Default": "" },
+          { "Name": "LogLevel", "DisplayName": "Log Level", "Type": "dropdown", "Default": "info", "Items": ["debug","info","warn","error"] }
+        ]
+      }
+    ]
+  }
+}
